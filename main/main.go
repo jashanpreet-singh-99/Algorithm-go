@@ -7,6 +7,4 @@ import (
 func main() {
   mat := matrix.RandomMatrix(3,3)
   matrix.Mprint(mat)
-  matrix.Mprint(mat)
-  matrix.Mprint(mat)
 }
