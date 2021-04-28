@@ -125,15 +125,7 @@ return :-
         mat : the modified matrix.
 */
 func (mat Mat) SubtractScalar(s float32) Mat {
-  var temp [][]float32
-  for i := 0 ; i < mat.Shape[0]; i++ {
-    temp_r := make([]float32, mat.Shape[1])
-    for j := 0 ; j < mat.Shape[1]; j++ {
-      temp_r[j] = mat.Value[i][j] - s
-    }
-    temp = append(temp, temp_r)
-  }
-  return Mat{temp, mat.Shape}
+  return mat.AddScalar(-1 * s)
 }
 
 /*
@@ -202,6 +194,22 @@ func (mat Mat) MultiplyScalar(s float32) Mat {
     temp = append(temp, temp_r)
   }
   return Mat{temp, mat.Shape}
+}
+
+/*
+Objective := Divide scaler value with matrix
+
+parameters :-
+        s : the scalar to divide.
+return :-
+        mat : the modified matrix.
+*/
+func (mat Mat) DivideScalar(s float32) Mat {
+  if s == 0 {
+    fmt.Println("Divide by zero error.")
+    return mat
+  }
+  return mat.MultiplyScalar(1/s)
 }
 
 /*
