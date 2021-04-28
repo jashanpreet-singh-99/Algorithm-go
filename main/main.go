@@ -7,13 +7,8 @@ import (
   )
 
 func main() {
-  mat := matrix.RandomMatrix(2,3)
+  mat := matrix.RandomMatrix(6,6, 10)
   fmt.Println(reflect.TypeOf(mat))
   mat.Print()
-  mat = mat.TransposeMatrix()
-  mat.Print()
-  mat_2 := mat.AddMatrix(mat)
-  mat_2.Print()
-  mat_2 = mat_2.AddScalar(10)
-  mat_2.Print()
+  fmt.Println(matrix.Determinant(mat))
 }

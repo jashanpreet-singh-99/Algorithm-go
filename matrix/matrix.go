@@ -21,11 +21,12 @@ var rand_1 *rand.Rand // the rand object linked to seed
 /*
 Objective := generate a random matrix of given size
 parameters :-
-          r : number of rows
-          c : number of columns
+          r     : number of rows
+          c     : number of columns
+          limit : max value
 return := Mat Objective
 */
-func RandomMatrix(r int, c int) Mat {
+func RandomMatrix(r int, c int, limit int) Mat {
   if seeded == false {
     x1 := rand.NewSource(time.Now().UnixNano())
     rand_1 = rand.New(x1)
@@ -35,7 +36,7 @@ func RandomMatrix(r int, c int) Mat {
   for i := 0; i < r; i++ {
     temp_r := make([]int, c)
     for j := 0 ; j < c; j++ {
-      temp_r[j] = rand_1.Intn(100)
+      temp_r[j] = rand_1.Intn(limit)
     }
     temp = append(temp, temp_r)
   }
@@ -152,4 +153,55 @@ func (mat Mat) TransposeMatrix() Mat {
     temp = append(temp, temp_r)
   }
   return  Mat{temp,[]int{mat.Shape[1], mat.Shape[0]}}
+}
+
+/*
+func (mat Mat) InverseMatrix() Mat {
+  if mat.Shape[0] != mat.Shape[1] {
+    fmt.Println("Not a Square Matrix. Skipping.")
+    return mat
+  }
+  determinant :=  Determinant(mat)
+  if determinant == 0 {
+    fmt.Println("Determinant of the Matrix is 0. Skipping.")
+    return mat
+  }
+
+  return mat
+}
+*/
+
+
+func Determinant(mat Mat) int {
+  if mat.Shape[0] == 2 && mat.Shape[1] == 2 {
+    return mat.Value[0][0]*mat.Value[1][1] - mat.Value[0][1]*mat.Value[1][0]
+  }
+  deter := 0
+  for i := 0 ; i < mat.Shape[0]; i++ {
+    a,temp_mat := SplitMatrix(mat, i)
+    if (i % 2) != 0 {
+      a = -a
+    }
+    deter += a*Determinant(temp_mat)
+  }
+  return deter
+}
+
+
+func SplitMatrix(mat Mat, col int) (int, Mat) {
+  a := mat.Value[0][col]
+  var temp [][]int
+  for i := 1; i < mat.Shape[0]; i++ {
+    count_j := 0
+    temp_r := make([]int, mat.Shape[1])
+    for j := 0 ; j < mat.Shape[1]; j++ {
+      if j == col {
+        continue
+      }
+      temp_r[count_j] = mat.Value[i][j]
+      count_j += 1
+    }
+    temp = append(temp, temp_r)
+  }
+  return a,Mat{temp, []int{mat.Shape[0]-1, mat.Shape[1] -1}}
 }
