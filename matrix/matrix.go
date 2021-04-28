@@ -6,10 +6,12 @@ import (
   "fmt"
 )
 
-type Scalar_Vector interface {
-  Add()
-}
-
+/*
+Matrix object
+parameters :-
+        Value : contain all the values of each element
+        Shape : store info about number of olumns and rows
+*/
 type Mat struct{
   Value [][]float32
   Shape []int
@@ -20,11 +22,12 @@ var rand_1 *rand.Rand // the rand object linked to seed
 
 /*
 Objective := generate a random matrix of given size
+
 parameters :-
           r     : number of rows
           c     : number of columns
           limit : max value
-return := Mat Objective
+return :- Mat Objective
 */
 func RandomMatrix(r int, c int, limit int) Mat {
   if seeded == false {
@@ -45,6 +48,9 @@ func RandomMatrix(r int, c int, limit int) Mat {
 
 /*
 Objective := print the matrix in readable format
+
+parameters :-
+       mat : the matrix to print
 */
 func (mat Mat) Print() {
   r := mat.Shape[0]
@@ -60,7 +66,12 @@ func (mat Mat) Print() {
 }
 
 /*
-Objective := add scaler value from matrix
+Objective := add scaler value from matrix.
+
+parameters :-
+        s  : the scalar value to add.
+return :-
+        mat : the modified matrix.
 */
 func (mat Mat) AddScalar(s float32) Mat {
   var temp [][]float32
@@ -76,6 +87,11 @@ func (mat Mat) AddScalar(s float32) Mat {
 
 /*
 Objective := add matrix from matrix
+
+parameters :-
+        mat : the matrix to add.
+return :-
+        mat : the modified matrix.
 */
 func (mat Mat) AddMatrix(mat_2 Mat) Mat {
   if len(mat.Shape) != len(mat_2.Shape) {
@@ -102,6 +118,11 @@ func (mat Mat) AddMatrix(mat_2 Mat) Mat {
 
 /*
 Objective := subtract scaler value from matrix
+
+parameters :-
+        s   : the scalar to subtract.
+return :-
+        mat : the modified matrix.
 */
 func (mat Mat) SubtractScalar(s float32) Mat {
   var temp [][]float32
@@ -117,6 +138,11 @@ func (mat Mat) SubtractScalar(s float32) Mat {
 
 /*
 Objective := subtract matrix from matrix
+
+parameters :-
+        mat : the matrix to subtract.
+return :-
+        mat : the modified matrix.
 */
 func (mat Mat) SubtractMatrix(mat_2 Mat) Mat {
   if len(mat.Shape) != len(mat_2.Shape) {
@@ -141,6 +167,9 @@ func (mat Mat) SubtractMatrix(mat_2 Mat) Mat {
   return Mat{temp, mat.Shape}
 }
 
+/*
+Objective := return the transpose of the given matrix
+*/
 func (mat Mat) TransposeMatrix() Mat {
   r := mat.Shape[0]
   c := mat.Shape[1]
@@ -157,6 +186,11 @@ func (mat Mat) TransposeMatrix() Mat {
 
 /*
 Objective := Multiply scaler value with matrix
+
+parameters :-
+        s : the scalar to multiply.
+return :-
+        mat : the modified matrix.
 */
 func (mat Mat) MultiplyScalar(s float32) Mat {
   var temp [][]float32
@@ -187,6 +221,14 @@ func (mat Mat) InverseMatrix() Mat {
   return adj_mat
 }
 
+/*
+Objective := Find the determinent of the Matrix
+normally split the matrix until its 2 X 2 and then recursively call back.
+parameters :-
+       mat : matrix on which to operate.
+return :-
+      deter : dterminant of the matrix float32 value.
+*/
 func Determinant(mat Mat) float32 {
   if mat.Shape[0] == 2 && mat.Shape[1] == 2 {
     return mat.Value[0][0]*mat.Value[1][1] - mat.Value[0][1]*mat.Value[1][0]
@@ -202,6 +244,15 @@ func Determinant(mat Mat) float32 {
   return deter
 }
 
+/*
+Objective := Find the Adjoint Matrix
+
+parameters :-
+       mat : matrix on which to operate.
+return :-
+      mat   : adjoint matrix
+      deter : dterminant of the matrix float32 value.
+*/
 func AdjointMatrix(mat Mat) (Mat,float32) {
   var deter_mat float32 = 0
   var adj_mat [][]float32
@@ -229,7 +280,17 @@ func AdjointMatrix(mat Mat) (Mat,float32) {
   return semi_adj_mat.TransposeMatrix(), deter_mat
 }
 
+/*
+Objective := Split the matrix into sub matrix based on the placement of the cofficient.
 
+parameters :-
+       mat : matrix on which to operate.
+       row : the row placement of the cofficient.
+       col : the column placement of the cofficient.
+return :-
+      a   : the cofficient of the caller matrix
+      mat : the sub matrix, after removing the row and column of the cofficient.
+*/
 func SplitMatrix(mat Mat, row int,col int) (float32, Mat) {
   var temp [][]float32
   for i := 0; i < mat.Shape[0]; i++ {
