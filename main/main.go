@@ -7,8 +7,9 @@ import (
   )
 
 func main() {
-  mat := matrix.RandomMatrix(6,6, 10)
+  mat := matrix.RandomMatrix(3,3, 10)
   fmt.Println(reflect.TypeOf(mat))
   mat.Print()
-  fmt.Println(matrix.Determinant(mat))
+  mat = mat.InverseMatrix()
+  mat.Print()
 }

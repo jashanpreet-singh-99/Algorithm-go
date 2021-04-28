@@ -156,20 +156,37 @@ func (mat Mat) TransposeMatrix() Mat {
 }
 
 /*
+Objective := Multiply scaler value with matrix
+*/
+func (mat Mat) MultiplyScalar(s int) Mat {
+  var temp [][]int
+  for i := 0 ; i < mat.Shape[0]; i++ {
+    temp_r := make([]int, mat.Shape[1])
+    for j := 0 ; j < mat.Shape[1]; j++ {
+      temp_r[j] = mat.Value[i][j] * s
+    }
+    temp = append(temp, temp_r)
+  }
+  return Mat{temp, mat.Shape}
+}
+
+/*
+Objective := Find inverse of a matrix if possible
+*/
 func (mat Mat) InverseMatrix() Mat {
   if mat.Shape[0] != mat.Shape[1] {
     fmt.Println("Not a Square Matrix. Skipping.")
     return mat
   }
-  determinant :=  Determinant(mat)
+  adj_mat,determinant :=  AdjointMatrix(mat)
   if determinant == 0 {
     fmt.Println("Determinant of the Matrix is 0. Skipping.")
     return mat
   }
-
-  return mat
+  adj_mat.MultiplyScalar(1/determinant)
+  return adj_mat
 }
-*/
+
 
 
 func Determinant(mat Mat) int {
@@ -178,7 +195,7 @@ func Determinant(mat Mat) int {
   }
   deter := 0
   for i := 0 ; i < mat.Shape[0]; i++ {
-    a,temp_mat := SplitMatrix(mat, i)
+    a,temp_mat := SplitMatrix(mat, 0, i)
     if (i % 2) != 0 {
       a = -a
     }
@@ -187,11 +204,41 @@ func Determinant(mat Mat) int {
   return deter
 }
 
+func AdjointMatrix(mat Mat) (Mat,int) {
+  deter_mat := 0
+  var adj_mat [][]int
+  for i := 0 ; i < mat.Shape[0]; i++ {
+    adj_mat_r := make([]int, mat.Shape[1])
+    for j:= 0; j < mat.Shape[1]; j ++ {
+      a,temp_mat := SplitMatrix(mat, i, j)
+      deter := Determinant(temp_mat)
+      r_m := 1
+      if (i % 2) != 0 {
+        r_m = -1
+      }
+      c_m := 1
+      if (j % 2) != 0 {
+        c_m = -1
+      }
+      adj_mat_r[j] = r_m * c_m * deter
+      if i == 0 {
+        deter_mat += r_m * c_m * a * deter
+      }
+    }
+    adj_mat = append(adj_mat, adj_mat_r)
+  }
+  semi_adj_mat := Mat{adj_mat, mat.Shape}
+  return semi_adj_mat.TransposeMatrix(), deter_mat
+}
 
-func SplitMatrix(mat Mat, col int) (int, Mat) {
-  a := mat.Value[0][col]
+
+func SplitMatrix(mat Mat, row int,col int) (int, Mat) {
+  a := mat.Value[row][col]
   var temp [][]int
-  for i := 1; i < mat.Shape[0]; i++ {
+  for i := 0; i < mat.Shape[0]; i++ {
+    if i == row {
+      continue
+    }
     count_j := 0
     temp_r := make([]int, mat.Shape[1])
     for j := 0 ; j < mat.Shape[1]; j++ {
