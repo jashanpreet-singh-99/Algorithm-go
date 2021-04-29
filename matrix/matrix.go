@@ -47,6 +47,23 @@ func RandomMatrix(r int, c int, limit int) Mat {
 }
 
 /*
+Objective := generate a Identity matrix of given size
+
+parameters :-
+          s     : number of columns or rows
+return :- Mat Objective
+*/
+func IdentityMatrix(s int) Mat {
+  var temp [][]float32
+  for i := 0; i < s; i++ {
+    temp_r := make([]float32, s)
+    temp_r[i] = 1
+    temp = append(temp, temp_r)
+  }
+  return Mat{temp, []int{s,s}}
+}
+
+/*
 Objective := print the matrix in readable format
 
 parameters :-
