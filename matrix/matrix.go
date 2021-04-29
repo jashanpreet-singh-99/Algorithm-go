@@ -197,6 +197,35 @@ func (mat Mat) MultiplyScalar(s float32) Mat {
 }
 
 /*
+Objective := Multiply scaler value with matrix
+
+parameters :-
+        mat : the mat to multiply with.
+return :-
+        mat : the modified matrix.
+*/
+func (mat Mat) MultiplyMatrix(mat_2 Mat) Mat {
+  if mat.Shape[1] != mat_2.Shape[0] {
+    fmt.Println("Dimension error. Skipping.")
+    return mat
+  }
+  Shape := []int{ mat.Shape[1], mat_2.Shape[0]}
+  var temp [][]float32
+  for i := 0 ; i < Shape[0]; i++ {
+    temp_r := make([]float32, Shape[1])
+    for j := 0 ; j < Shape[1]; j++ {
+      var p_val float32 = 0
+      for k := 0; k < Shape[0]; k++ {
+        p_val += mat.Value[i][k] * mat_2.Value[k][j]
+      }
+      temp_r[j] = p_val
+    }
+    temp = append(temp, temp_r)
+  }
+  return Mat{temp, Shape}
+}
+
+/*
 Objective := Divide scaler value with matrix
 
 parameters :-
