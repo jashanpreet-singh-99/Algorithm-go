@@ -17,6 +17,14 @@ type Mat struct{
   Shape []int
 }
 
+type MatrixError struct {
+  Message string
+}
+
+func (err *MatrixError) Error() string {
+  return err.Message
+}
+
 var seeded bool // Which if seed is initialized
 var rand_1 *rand.Rand // the rand object linked to seed
 
@@ -110,15 +118,13 @@ parameters :-
 return :-
         mat : the modified matrix.
 */
-func (mat Mat) AddMatrix(mat_2 Mat) Mat {
+func (mat Mat) AddMatrix(mat_2 Mat) (Mat,error) {
   if len(mat.Shape) != len(mat_2.Shape) {
-    fmt.Println("Miss-matched dimmensions.")
-    return mat
+    return mat,&MatrixError{"Miss-matched dimmensions."}
   } else {
     for dim := 0 ; dim < len(mat.Shape); dim++ {
-      if mat.Shape[dim] != mat.Shape[dim] {
-        fmt.Println("Miss-matched shape at : ", dim)
-        return mat
+      if mat.Shape[dim] != mat_2.Shape[dim] {
+        return mat,&MatrixError{("Miss-matched shape.")}
       }
     }
   }
@@ -130,7 +136,7 @@ func (mat Mat) AddMatrix(mat_2 Mat) Mat {
     }
     temp = append(temp, temp_r)
   }
-  return Mat{temp, mat.Shape}
+  return Mat{temp, mat.Shape},nil
 }
 
 /*
@@ -153,15 +159,13 @@ parameters :-
 return :-
         mat : the modified matrix.
 */
-func (mat Mat) SubtractMatrix(mat_2 Mat) Mat {
+func (mat Mat) SubtractMatrix(mat_2 Mat) (Mat,error) {
   if len(mat.Shape) != len(mat_2.Shape) {
-    fmt.Println("Miss-matched dimmensions.")
-    return mat
+    return mat,&MatrixError{"Miss-matched dimmensions."}
   } else {
     for dim := 0 ; dim < len(mat.Shape); dim++ {
-      if mat.Shape[dim] != mat.Shape[dim] {
-        fmt.Println("Miss-matched shape at : ", dim)
-        return mat
+      if mat.Shape[dim] != mat_2.Shape[dim] {
+        return mat,&MatrixError{("Miss-matched shape.")}
       }
     }
   }
@@ -173,7 +177,7 @@ func (mat Mat) SubtractMatrix(mat_2 Mat) Mat {
     }
     temp = append(temp, temp_r)
   }
-  return Mat{temp, mat.Shape}
+  return Mat{temp, mat.Shape},nil
 }
 
 /*
@@ -221,10 +225,9 @@ parameters :-
 return :-
         mat : the modified matrix.
 */
-func (mat Mat) MultiplyMatrix(mat_2 Mat) Mat {
+func (mat Mat) MultiplyMatrix(mat_2 Mat) (Mat,error) {
   if mat.Shape[1] != mat_2.Shape[0] {
-    fmt.Println("Dimension error. Skipping.")
-    return mat
+    return mat,&MatrixError{("Miss-matched shape.")}
   }
   Shape := []int{ mat.Shape[1], mat_2.Shape[0]}
   var temp [][]float32
@@ -239,7 +242,7 @@ func (mat Mat) MultiplyMatrix(mat_2 Mat) Mat {
     }
     temp = append(temp, temp_r)
   }
-  return Mat{temp, Shape}
+  return Mat{temp, Shape},nil
 }
 
 /*
@@ -250,29 +253,26 @@ parameters :-
 return :-
         mat : the modified matrix.
 */
-func (mat Mat) DivideScalar(s float32) Mat {
+func (mat Mat) DivideScalar(s float32) (Mat,error) {
   if s == 0 {
-    fmt.Println("Divide by zero error.")
-    return mat
+    return mat,&MatrixError{"Divede By zero error."}
   }
-  return mat.MultiplyScalar(1/s)
+  return mat.MultiplyScalar(1/s),nil
 }
 
 /*
 Objective := Find inverse of a matrix if possible
 */
-func (mat Mat) InverseMatrix() Mat {
+func (mat Mat) InverseMatrix() (Mat,error) {
   if mat.Shape[0] != mat.Shape[1] {
-    fmt.Println("Not a Square Matrix. Skipping.")
-    return mat
+    return mat,&MatrixError{"Not a Square matrix."}
   }
   adj_mat,determinant :=  AdjointMatrix(mat)
   if determinant == 0 {
-    fmt.Println("Determinant of the Matrix is 0. Skipping.")
-    return mat
+    return mat,&MatrixError{"The determinant of the matrix is zero."}
   }
   adj_mat = adj_mat.MultiplyScalar(1/determinant)
-  return adj_mat
+  return adj_mat,nil
 }
 
 /*
