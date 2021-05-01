@@ -13,4 +13,7 @@
   - Matrix Inverse
   - Matrix Transpose
   - Random Matrix Generator
-  - Identity Matrix Generator  
+  - Identity Matrix Generator
+
+  ### Matrix Optimized
+    - Go-routine based implementations
