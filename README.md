@@ -15,5 +15,9 @@
   - Random Matrix Generator
   - Identity Matrix Generator
 
-  ### Matrix Optimized
-    - Go-routine based implementations
+## To-Do
+
+### Matrix Optimized
+  - Go-routine based implementations
+
+### Update Errors
