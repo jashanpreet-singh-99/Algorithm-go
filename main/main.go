@@ -5,12 +5,13 @@ import (
   "time"
   "log"
   "jashanpreet_singh_99/matrix"
+  "jashanpreet_singh_99/matrix_go"
   )
 
 func main() {
   startTime := time.Now()
   fmt.Println("Start Time : ", startTime)
-  mat := matrix.RandomMatrix(10,10, 10)
+  mat := matrix_go.GRandomMatrix(10,10, 10)
   mat.Print()
   fmt.Println(" Execution Time : ", time.Since(startTime))
   mat_2 := matrix.RandomMatrix(10,9, 10)
