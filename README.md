@@ -17,6 +17,8 @@
 
 ## To-Do
 
+### Fix Matrix-go refactoring
+
 ### Matrix Optimized
   - Go-routine based implementations
 
