@@ -22,4 +22,6 @@
 ### Matrix Optimized
   - Go-routine based implementations
 
+### Loop Optimizer
+
 ### Update Errors
